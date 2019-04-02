@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="icon" href="../public/img/favicon.png" type="image/png">
+	<title>Nexus SaaS</title>
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="../public/css/bootstrap.css">
+	<link rel="stylesheet" href="../public/vendors/linericon/style.css">
+	<link rel="stylesheet" href="../public/css/font-awesome.min.css">
+	<link rel="stylesheet" href="../public/vendors/owl-carousel/owl.carousel.min.css">
+	<link rel="stylesheet" href="../public/vendors/lightbox/simpleLightbox.css">
+	<link rel="stylesheet" href="../public/vendors/nice-select/css/nice-select.css">
+	<link rel="stylesheet" href="../public/vendors/animate-css/animate.css">
+	<!-- main css -->
+	<link rel="stylesheet" href="../public/css/style.css">
+	<link rel="stylesheet" href="../public/scss/_responsive.scss">
+</head>
+<body class="about_page">
+
+<!--================Header Menu Area =================-->
+<header class="header_area">
+	<div class="main_menu">
+		<nav class="navbar navbar-expand-lg navbar-light">
+			<div class="container">
+				<!-- Brand and toggle get grouped for better mobile display -->
+				<a class="navbar-brand logo_h" href="/"><img src="../public/img/logo.png" alt=""></a>
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+						aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<!-- Collect the nav links, forms, and other content for toggling -->
+				<div class="collapse navbar-collapse offset" id="navbarSupportedContent">
+					<ul class="nav navbar-nav menu_nav justify-content-center">
+						<li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+						<li class="nav-item active"><a class="nav-link" href="about-us.html">About</a></li>
+						<li class="nav-item"><a class="nav-link" href="gallery.html">Gallery</a>
+						<li class="nav-item submenu dropdown">
+							<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+							   aria-expanded="false">Pages</a>
+							<ul class="dropdown-menu">
+								<li class="nav-item"><a class="nav-link" href="price.html">Pricing</a>
+								<li class="nav-item"><a class="nav-link" href="games.html">Games</a>
+								<li class="nav-item"><a class="nav-link" href="elements.html">Elements</a>
+							</ul>
+						</li>
+						<li class="nav-item submenu dropdown">
+							<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+							   aria-expanded="false">Blog</a>
+							<ul class="dropdown-menu">
+								<li class="nav-item"><a class="nav-link" href="blog.html">Blog</a></li>
+								<li class="nav-item"><a class="nav-link" href="single-blog.html">Blog Details</a></li>
+							</ul>
+						</li>
+						<li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+					</ul>
+					<ul class="nav navbar-nav navbar-right">
+						<li class="nav-item"><a href="/login" class="primary_btn">join us</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+	</div>
+</header>
+<!--================Header Menu Area =================-->
+
+<!--================Home Banner Area =================-->
+<section class="banner_area">
+	<div class="banner_inner d-flex align-items-center">
+		<div class="overlay bg-parallax" data-stellar-ratio="0.9" data-stellar-vertical-offset="0" data-background=""></div>
+		<div class="container">
+			<div class="banner_content text-center">
+				<div class="page_link">
+					<a href="index.html">Home</a>
+					<a href="about-us.html">About</a>
+				</div>
+				<h2>About Us</h2>
+			</div>
+		</div>
+	</div>
+</section>
+<!--================End Home Banner Area =================-->
+
+<!--================Start About Us Area =================-->
+<section class="about_us_area section_gap_top" style="background-color: #E9EBEE">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-2"></div>
+			<div class="col-lg-8">
+				<div id="content" class="jumbotron " style="padding-top: 20px; background-color: #FFFFFF" >
+					<div id="alert"></div>
+					<h3 style="text-align:center;margin-bottom: 10%;margin-top: 3%">토큰 충전</h3>
+					<!-- 인증 처리 후 메시지가 있으면 메시지 표시 -->
+					<%
+					if(output){
+					if(output === "success"){
+						var message = "success use Token";
+					%>         <div class="alert alert-success"><%= message %></div>
+					<%     }else{
+						var message = "fail use Token, so Please turn it over again.\n";
+					%>           <div class="alert alert-danger"><%= message %></div>
+					<%     }}
+					%>
+					<div id="alertMessage" class="alert alert-danger" style="display: none"></div>
+					<form method="post", action="buyToken/buy">
+						<div class="form-group">
+							<label>보유 Token</label><br>
+							<div id="token"><h4 style="color: #0c5460;"><%= token %></h4></div><br>
+						</div>
+						<div class="form-group">
+							<label>충전할 Token</label>
+							<input type="text" class="form-control" placeholder="0" name="Token" maxlength="20" required>
+						</div>
+						<input type="submit" class="btn btn-info form-control" value="충전" style="margin-top: 5%">
+					</form>
+				</div>
+			</div>
+			<div class="col-lg-2"></div>
+		</div>
+	</div>
+
+</section>
+<!--================End About Us Area =================-->
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="../public/js/jquery-3.2.1.min.js"></script>
+<script src="../public/js/popper.js"></script>
+<script src="../public/js/bootstrap.min.js"></script>
+<script src="../public/js/stellar.js"></script>
+<script src="../public/js/jquery.magnific-popup.min.js"></script>
+<script src="../public/vendors/nice-select/js/jquery.nice-select.min.js"></script>
+<script src="../public/vendors/isotope/imagesloaded.pkgd.min.js"></script>
+<script src="../public/vendors/isotope/isotope-min.js"></script>
+<script src="../public/vendors/owl-carousel/owl.carousel.min.js"></script>
+<script src="../public/js/jquery.ajaxchimp.min.js"></script>
+<script src="../public/vendors/counter-up/jquery.waypoints.min.js"></script>
+<script src="../public/vendors/counter-up/jquery.counterup.min.js"></script>
+<script src="../public/js/mail-script.js"></script>
+<!--gmaps Js-->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCjCGmQ0Uq4exrzdcL6rvxywDDOvfAu6eE"></script>
+<script src="../public/js/gmaps.min.js"></script>
+<script src="../public/js/theme.js"></script>
+<script>
+    function use() {
+        var token = $('#token').val();
+        console.log("token : ", token);
+
+        if(token <=10){
+            $('#alertMessage').css('display', 'block');
+            $('#alertMessage').html('보유하신 토큰이 부족합니다. 충전해주세요.');
+        }else{
+            console.log("토큰 적합");
+            $('#form').post("/useToken/use");
+        }
+    }
+</script>
+</body>
+</html>

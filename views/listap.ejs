@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" href="../public/img/favicon.png" type="image/png">
+    <title>Nexus SaaS</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="../public/css/bootstrap.css">
+    <link rel="stylesheet" href="../public/vendors/linericon/style.css">
+    <link rel="stylesheet" href="../public/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../public/vendors/owl-carousel/owl.carousel.min.css">
+    <link rel="stylesheet" href="../public/css/magnific-popup.css">
+    <link rel="stylesheet" href="../public/vendors/nice-select/css/nice-select.css">
+    <link rel="stylesheet" href="../public/vendors/animate-css/animate.css">
+    <link rel="stylesheet" href="../public/vendors/flaticon/flaticon.css">
+    <!-- main css -->
+    <link rel="stylesheet" href="../public/css/style.css">
+    <script>
+        function listap(page, perPage) {
+            document.location = '/listap?page=' + page + '&perPage=' + perPage;
+        }
+    </script>
+</head>
+
+<body>
+
+<!--================Header Menu Area =================-->
+<header class="header_area">
+    <div class="main_menu">
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <div class="container">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <a class="navbar-brand logo_h" href="/mainmenu"><img src="../public/img/logo.png" alt=""></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
+                    <ul class="nav navbar-nav menu_nav justify-content-right">
+                        <li class="nav-item active"><a class="nav-link" href="/mainmenu">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/addap">AP 등록</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/listap">AP 게시판</a>
+                        <li class="nav-item"><a class="nav-link" href="/mypage">My page</a>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="nav-item"><a href="/logout" class="primary_btn">로그아웃</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+</header>
+<!--================Header Menu Area =================-->
+
+<!--================Home Banner Area =================-->
+<section class="banner_area">
+    <div class="banner_inner d-flex align-items-center">
+        <div class="overlay bg-parallax" data-stellar-ratio="0.9" data-stellar-vertical-offset="0" data-background=""></div>
+        <div class="container">
+            <div class="banner_content text-center">
+                <div class="page_link">
+                    <a href="index.html">Home</a>
+                    <a href="price.html">Board</a>
+                </div>
+                <h2>AP Board</h2>
+            </div>
+        </div>
+    </div>
+</section>
+<!--================End Home Banner Area =================-->
+<!--================ Start Newsletter Area ================-->
+
+<section class="newsletter_area"  style = "margin: 3% 15% 3% 15%">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="newsletter_inner">
+                    <h1>Search AP</h1>
+                    <p>you can search AP's details that you will use</p>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <aside class="newsletter_widget">
+                    <div id="mc_embed_signup">
+                        <form target="_blank" action="https://spondonit.us12.list-manage.com/subscribe/post?u=1462626880ade1ac87bd9c93a&amp;id=92a4423d01"
+                              method="get" class="subscribe_form relative">
+                            <div class="input-group d-flex flex-row">
+                                <input name="SSID" placeholder="AP's SSID" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Your email address'"
+                                       required="" type="text">
+                                <button class="btn primary_btn">search</button>
+                            </div>
+                        </form>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </div>
+</section>
+<!--================ End Newsletter Area ================-->
+
+<!--================ Start Pricing Plans Area ================-->
+<section class="pricing_area section_gap">
+    <!--<section style="margin-bottom: 2%">-->
+    <div class="container" style="padding-bottom: 30px">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="main_title">
+                    <h2>BOARD</h2>
+                    <h1>BOARD</h1>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <%
+
+            for (var i = 0; i < aps.length; i++) {
+                var curSsid = aps[i]._doc.ssid;
+                var curLikes = aps[i]._doc.likes;
+                var curWriter = aps[i]._doc.writer.id;
+                var curCreated = aps[i].createdTime;
+
+            %>
+            <!--<div class="col-lg-4"></div>-->
+            <div class="col-lg-4 col-md-6">
+                <div class="pricing_item">
+                    <a style="color: #fff; font-size: 23px" href="/showap/<%= aps[i]._id %>"><%= curSsid %></a>
+                    <div class="user_n">
+                        <a class="user_number" href="#">이용중</a>
+                    </div>
+                    <h1 class="p_price"><img src="../public/img/uuser.png" alt=""> 5</h1>
+                    <div class="p_list">
+                        <ul>
+                            <li>오전9:30 ~ 오전10:20</li>
+                            <li>오후12:20 ~ 오후2:20</li>
+                            <li>&nbsp</li>
+                        </ul>
+                    </div>
+                    <div class="p_btn" style="padding-bottom: 15px">
+                        <a class="gradient_btn" href="/useToken/<%= aps[i]._id %>>"><span>use Now</span></a>
+                    </div>
+                    <div style= "color : white; padding-bottom: 15px; text-align: right; padding-right: 40px">
+                        <!--<i class="fa fa-eye" aria-hidden="true"></i> 20 &nbsp;-->
+                        LIKES <i class="fa fa-heart" aria-hidden="true" style="color: red"></i> <%= curLikes %> &nbsp;&nbsp;
+                        <!--<i class="fa fa-comments-o" aria-hidden="true"></i> 05-->
+                    </div>
+                </div>
+            </div>
+            <%
+            }
+            %>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!--================ End Pricing Plans Area ================-->
+
+
+
+<!--================Footer Area =================-->
+<footer class="footer_area section_gap_top">
+    <div class="container">
+        <div class="row footer_inner">
+            <div class="col-lg-3 col-sm-6">
+                <aside class="f_widget ab_widget">
+                    <div class="f_title">
+                        <h4>About Farfly</h4>
+                    </div>
+                    <ul>
+                        <li><a href="#"></a>For Business</a></li><a href="#">
+                            <li><a href="#"></a>Premium Plans
+                        </a></li>
+                        <li><a href="#"></a>Reviews</a></li>
+                        <li><a href="#"></a>How it Works</a></li>
+                        <li><a href="#"></a>Farfly Blog</a></li>
+                    </ul>
+                </aside>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <aside class="f_widget ab_widget">
+                    <div class="f_title">
+                        <h4>Company</h4>
+                    </div>
+                    <ul>
+                        <li><a href="#"></a>Product Tour</a></li><a href="#">
+                            <li><a href="#"></a>Pricing
+                        </a></li>
+                        <li><a href="#"></a>Founding Members</a></li>
+                        <li><a href="#"></a>Case Studies</a></li>
+                        <li><a href="#"></a>Product Updates</a></li>
+                    </ul>
+                </aside>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <aside class="f_widget ab_widget">
+                    <div class="f_title">
+                        <h4>Support</h4>
+                    </div>
+                    <ul>
+                        <li><a href="#"></a>Documentation</a></li><a href="#">
+                            <li><a href="#"></a>Data Securiry
+                        </a></li>
+                        <li><a href="#"></a>Site Performance</a></li>
+                        <li><a href="#"></a>Action Plan</a></li>
+                        <li><a href="#"></a>Resources</a></li>
+                    </ul>
+                </aside>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <aside class="f_widget ab_widget">
+                    <div class="f_title">
+                        <h4>Legal</h4>
+                    </div>
+                    <ul>
+                        <li><a href="#"></a>Terms and conditions</a></li><a href="#">
+                            <li><a href="#"></a>Privacy Policy
+                        </a></li>
+                        <li><a href="#"></a>Cookie Information</a></li>
+                        <li><a href="#"></a>Opt - Out</a></li>
+                    </ul>
+                </aside>
+            </div>
+        </div>
+        <div class="row single-footer-widget">
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="copy_right_text">
+                    <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                        Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="social_widget">
+                    <a href="#"><i class="fa fa-facebook"></i></a>
+                    <a href="#"><i class="fa fa-twitter"></i></a>
+                    <a href="#"><i class="fa fa-dribbble"></i></a>
+                    <a href="#"><i class="fa fa-behance"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<!--================End Footer Area =================-->
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="../public/js/jquery-3.2.1.min.js"></script>
+<script src="../public/js/popper.js"></script>
+<script src="../public/js/bootstrap.min.js"></script>
+<script src="../public/js/stellar.js"></script>
+<script src="../public/js/jquery.magnific-popup.min.js"></script>
+<script src="../public/vendors/nice-select/js/jquery.nice-select.min.js"></script>
+<script src="../public/vendors/isotope/imagesloaded.pkgd.min.js"></script>
+<script src="../public/vendors/isotope/isotope-min.js"></script>
+<script src="../public/vendors/owl-carousel/owl.carousel.min.js"></script>
+<script src="../public/js/jquery.ajaxchimp.min.js"></script>
+<script src="../public/vendors/counter-up/jquery.waypoints.min.js"></script>
+<script src="../public/vendors/counter-up/jquery.counterup.min.js"></script>
+<script src="../public/js/mail-script.js"></script>
+<!--gmaps Js-->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCjCGmQ0Uq4exrzdcL6rvxywDDOvfAu6eE"></script>
+<script src="../public/js/gmaps.min.js"></script>
+<script src="../public/js/theme.js"></script>
+</body>
+
+</html>

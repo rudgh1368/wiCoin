@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" href="../public/img/favicon.png" type="image/png">
+    <title>Nexus SaaS</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="../public/css/bootstrap.css">
+    <link rel="stylesheet" href="../public/vendors/linericon/style.css">
+    <link rel="stylesheet" href="../public/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../public/vendors/owl-carousel/owl.carousel.min.css">
+    <link rel="stylesheet" href="../public/css/magnific-popup.css">
+    <link rel="stylesheet" href="../public/vendors/nice-select/css/nice-select.css">
+    <link rel="stylesheet" href="../public/vendors/animate-css/animate.css">
+    <!-- main css -->
+    <link rel="stylesheet" href="../public/css/style.css">
+    <link rel="stylesheet" href="../public/scss/_responsive.scss">
+</head>
+<body class="blog_page">
+
+<!--================Header Menu Area =================-->
+<header class="header_area">
+    <div class="main_menu">
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <div class="container">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <a class="navbar-brand logo_h" href="/mainmenu"><img src="../public/img/logo.png" alt=""></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
+                    <ul class="nav navbar-nav menu_nav justify-content-right">
+                        <li class="nav-item active"><a class="nav-link" href="/mainmenu">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/addap">AP 등록</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/listap">AP 게시판</a>
+                        <li class="nav-item"><a class="nav-link" href="/mypage">My page</a>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="nav-item"><a href="/logout" class="primary_btn">로그아웃</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+</header>
+<!--================Header Menu Area =================-->
+
+<!--================Home Banner Area =================-->
+<section class="banner_area">
+    <div class="banner_inner d-flex align-items-center">
+        <div class="overlay bg-parallax" data-stellar-ratio="0.9" data-stellar-vertical-offset="0" data-background=""></div>
+        <div class="container">
+            <div class="banner_content text-center">
+                <div class="page_link">
+                    <a href="index.html">Home</a>
+                    <a href="single-blog.html">AP Details</a>
+                </div>
+                <h2><AP></AP> DETAILS</h2>
+            </div>
+        </div>
+    </div>
+</section>
+<!--================End Home Banner Area =================-->
+
+<!--================Blog Area =================-->
+<section class="blog_area single-post-area section_gap">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 posts-list">
+                <div class="single-post row">
+                    <div class="col-lg-3  col-md-3">
+                        <div class="blog_info text-right">
+                            <ul class="blog_meta list">
+                                <li><a href="#">User<i class="lnr lnr-user"></i></a></li>
+                                <li><a href="#">12 Dec, 2017<i class="lnr lnr-calendar-full"></i></a></li>
+                                <li><a href="#">1.2M Views<i class="lnr lnr-eye"></i></a></li>
+                                <li><a href="#">06 Comments<i class="lnr lnr-bubble"></i></a></li>
+                            </ul>
+                            <ul class="social-links">
+                                <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                                <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                                <li><a href="#"><i class="fa fa-github"></i></a></li>
+                                <li><a href="#"><i class="fa fa-behance"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-9 col-md-9 blog_details">
+                        <%
+                        var curSsid = aps._doc.ssid;
+                        var curContents = aps._doc.contents;
+                        var curStartTime = aps._doc.start_time;
+                        var curEndTime = aps._doc.end_time;
+                        %>
+                        <h2><%= curSsid %></h2>
+                        <p class="excert">
+                            Start-Time : <%= curStartTime %>
+                        </p>
+                        <p>
+                            End-Time : <%= curEndTime %>
+                        </p>
+                        <p>
+                            <%= curContents %>
+                        </p>
+                    </div>
+
+
+                    <div>
+                        <a href="/add_user/<%= aps._id %>" class="primary-btn primary_btn" style="color: #fff; font-size: 14px; margin-left: 630px">사용하기</a>
+                        <!--<a href="/listap?page=0&perPage=2" class="primary-btn primary_btn" style="color: #fff; font-size: 14px; margin-left: 630px">글 목록</a>-->
+                    </div>
+                    <div>
+                        <a href="/like_ap/<%= aps._id %>" class="btn btn-sm btn-danger" style=" margin-left: 700px; margin-top: 30px">좋아요</a>
+                    </div>
+
+                </div>
+                <div class="navigation-area">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-12 nav-left flex-row d-flex justify-content-start align-items-center">
+                            <div class="thumb">
+                                <a href="#"><img class="img-fluid" src="../public/img/instagram/Image-05.jpg" alt=""></a>
+                            </div>
+                            <div class="arrow">
+                                <a href="#"><span class="lnr text-white lnr-arrow-left"></span></a>
+                            </div>
+                            <div class="detials">
+                                <p>Prev Ap</p>
+                                <a href="#"><h4>SSID_3245</h4></a>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-12 nav-right flex-row d-flex justify-content-end align-items-center">
+                            <div class="detials">
+                                <p>Next Ap</p>
+                                <a href="#"><h4>SSID_0123</h4></a>
+                            </div>
+                            <div class="arrow">
+                                <a href="#"><span class="lnr text-white lnr-arrow-right"></span></a>
+                            </div>
+                            <div class="thumb">
+                                <a href="#"><img class="img-fluid" src="../public/img/instagram/Image-06.jpg" alt=""></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <% for(var i=0; i< aps._doc.comments.length; i++) {
+                    var userName = aps._doc.comments[i].writer.id;
+                    var comment = aps._doc.comments[i].contents;
+                    var create_time = aps._doc.comments[i].created_at;
+                %>
+
+                <div class="comment-form">
+                    <%= userName %> 님의 댓글 :
+                    <%= comment %>
+                    <a type="button" href="/delete_comment?id=<%= aps._id  %>&ctime=<%= comment%>">댓글 삭제</a>
+                </div>
+                <% }%>
+
+                <div class="comment-form">
+                    <h4>댓글 남기기</h4>
+                    <form method="post" action="/add_comment">
+                        <div class="form-group">
+                            <textarea class="form-control mb-10" rows="5" name="comment" placeholder="Messege" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Messege'" required=""></textarea>
+                        </div>
+                        <input type="hidden" name="id" value= <%= aps._id %>>
+                        <button type="submit" class="primary-btn primary_btn" style="text-align: right">댓글 등록</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--================Blog Area =================-->
+
+<!--================Footer Area =================-->
+<footer class="footer_area section_gap_top">
+    <div class="container">
+        <div class="row footer_inner">
+            <div class="col-lg-3 col-sm-6">
+                <aside class="f_widget ab_widget">
+                    <div class="f_title">
+                        <h4>About Farfly</h4>
+                    </div>
+                    <ul>
+                        <li><a href="#"></a>For Business</a></li><a href="#">
+                            <li><a href="#"></a>Premium Plans
+                        </a></li>
+                        <li><a href="#"></a>Reviews</a></li>
+                        <li><a href="#"></a>How it Works</a></li>
+                        <li><a href="#"></a>Farfly Blog</a></li>
+                    </ul>
+                </aside>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <aside class="f_widget ab_widget">
+                    <div class="f_title">
+                        <h4>Company</h4>
+                    </div>
+                    <ul>
+                        <li><a href="#"></a>Product Tour</a></li><a href="#">
+                            <li><a href="#"></a>Pricing
+                        </a></li>
+                        <li><a href="#"></a>Founding Members</a></li>
+                        <li><a href="#"></a>Case Studies</a></li>
+                        <li><a href="#"></a>Product Updates</a></li>
+                    </ul>
+                </aside>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <aside class="f_widget ab_widget">
+                    <div class="f_title">
+                        <h4>Support</h4>
+                    </div>
+                    <ul>
+                        <li><a href="#"></a>Documentation</a></li><a href="#">
+                            <li><a href="#"></a>Data Securiry
+                        </a></li>
+                        <li><a href="#"></a>Site Performance</a></li>
+                        <li><a href="#"></a>Action Plan</a></li>
+                        <li><a href="#"></a>Resources</a></li>
+                    </ul>
+                </aside>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <aside class="f_widget ab_widget">
+                    <div class="f_title">
+                        <h4>Legal</h4>
+                    </div>
+                    <ul>
+                        <li><a href="#"></a>Terms and conditions</a></li><a href="#">
+                            <li><a href="#"></a>Privacy Policy
+                        </a></li>
+                        <li><a href="#"></a>Cookie Information</a></li>
+                        <li><a href="#"></a>Opt - Out</a></li>
+                    </ul>
+                </aside>
+            </div>
+        </div>
+        <div class="row single-footer-widget">
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="copy_right_text">
+                    <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                        Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="social_widget">
+                    <a href="#"><i class="fa fa-facebook"></i></a>
+                    <a href="#"><i class="fa fa-twitter"></i></a>
+                    <a href="#"><i class="fa fa-dribbble"></i></a>
+                    <a href="#"><i class="fa fa-behance"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<!--================End Footer Area =================-->
+
+
+
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="../public/js/jquery-3.2.1.min.js"></script>
+<script src="../public/js/popper.js"></script>
+<script src="../public/js/bootstrap.min.js"></script>
+<script src="../public/js/stellar.js"></script>
+<script src="../public/js/jquery.magnific-popup.min.js"></script>
+<script src="../public/vendors/nice-select/js/jquery.nice-select.min.js"></script>
+<script src="../public/vendors/isotope/imagesloaded.pkgd.min.js"></script>
+<script src="../public/vendors/isotope/isotope-min.js"></script>
+<script src="../public/vendors/owl-carousel/owl.carousel.min.js"></script>
+<script src="../public/js/jquery.ajaxchimp.min.js"></script>
+<script src="../public/js/mail-script.js"></script>
+<script src="../public/vendors/counter-up/jquery.waypoints.min.js"></script>
+<script src="../public/vendors/counter-up/jquery.counterup.min.js"></script>
+<script src="../public/js/theme.js"></script>
+</body>
+</html>
