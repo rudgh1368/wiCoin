@@ -111,12 +111,35 @@
 
 
                     <div>
-                        <a href="/add_user/<%= aps._id %>" class="primary-btn primary_btn" style="color: #fff; font-size: 14px; margin-left: 630px">사용하기</a>
+                        <a href="/useToken/<%= aps._id %>" class="primary-btn primary_btn" style="color: #fff; font-size: 14px; margin-left: 630px">사용하기</a>
                         <!--<a href="/listap?page=0&perPage=2" class="primary-btn primary_btn" style="color: #fff; font-size: 14px; margin-left: 630px">글 목록</a>-->
                     </div>
+
+
+                    <%
+                    var like = '해당없음';
+                    for(var i = 0; i< aps.userlist.length; i++){
+                        if(user._id == aps.userlist[i].user && aps.userlist[i].like == 0){
+                            like = '좋아요';
+                            break;
+                        }else {
+                            like = '해당없음'
+                            break;
+                        }
+                    }
+                    %>
+
                     <div>
-                        <a href="/like_ap/<%= aps._id %>" class="btn btn-sm btn-danger" style=" margin-left: 700px; margin-top: 30px">좋아요</a>
+                        <a href="/like_ap/<%= aps._id %>" class="btn btn-sm btn-danger" style=" margin-left: 700px; margin-top: 30px; display: block;" id="a"><%= like %></a>
                     </div>
+                    <script>
+                        if("<%= like%>" == "해당없음"){
+                            var text = document.getElementById('a');
+                            text.style.display = "none";
+                        }
+
+
+                    </script>
 
                 </div>
                 <div class="navigation-area">
