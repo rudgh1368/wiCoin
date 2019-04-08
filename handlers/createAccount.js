@@ -6,7 +6,6 @@ var createAccount = function (params, callback) {
 
     connection.createAccount(params[0].password, function (result) {
         if(result!=false) {
-            console.log("ether 전송 성공");
             callback(null, result);
         }
     })

@@ -12,6 +12,7 @@ apSchema.createSchema = function (mongoose) {
             end_time: {type: String},
             contents: {type: String},
             mac: {type: String},
+            price: {type: Number, 'default' : 0},
             // likes: [{
             //     user: {type: mongoose.Schema.ObjectId, ref: 'users'},
             //     like: {type: Number, 'default' : 0}
@@ -19,11 +20,12 @@ apSchema.createSchema = function (mongoose) {
             likes: {type: Number, 'default': 0},
             userlist: [{
                 user: {type: mongoose.Schema.ObjectId, ref: 'users'},
+                like: {type: Number, 'default' : 0},
                 using_at: {type: Date, 'default': Date.now}
             }],
             ap_condition: {type: String, 'default' : 'on'},
             comments: [{ // 댓글
-                contents: {type: String, trim: true, 'default': ''},					// 댓글 내용
+                contents: {type: String, trim: true, 'default': ''},               // 댓글 내용
                 writer: {type: mongoose.Schema.ObjectId, ref: 'users'},
                 created_time: {type: Date, 'default': Date.now}
             }],
@@ -97,6 +99,17 @@ apSchema.createSchema = function (mongoose) {
                 .exec(callback);
         },
 
+        search_list: function (options, callback) {
+            var criteria = options.criteria || {};
+
+            this.find({ $and : [{ap_condition:'on'}, {ssid : options.ssid}]})
+                .populate('writer', 'name provider id')
+                .sort({'created_at': -1})
+                // .limit(Number(options.perPage))
+                // .skip(options.perPage * options.page)
+                .exec(callback);
+        },
+
         mylist: function (id, callback) {
             // var criteria = options.criteria || {};
 
@@ -106,15 +119,15 @@ apSchema.createSchema = function (mongoose) {
                 .exec(callback);
         },
 
-        // ap on 클릭! //exec 문제 가능성,
+        // ap on 클릭!
         ap_on: function(paramId, callback) {
-            this.update( {_id:paramId}, {$set :{ap_conditon: 'on'} } )
+            this.update( {_id:paramId}, {$set :{ap_condition: 'off'} } )
                 .exec(callback);
         },
 
         // ap off 클릭!
         ap_off: function(paramId, callback) {
-            this.update( {_id:paramId}, {$set :{ap_conditon: 'off'} } )
+            this.update( {_id:paramId}, {$set :{ap_condition: 'on'} } )
                 .exec(callback);
         },
 
@@ -131,7 +144,7 @@ apSchema.createSchema = function (mongoose) {
             });
             return this.find({_id: id}, callback);
         },
-        delete_comment: function (id, ctime, user, callback) {		// 댓글 삭제
+        delete_comment: function (id, ctime, user, callback) {    // 댓글 삭제
             this.update({_id: id}, {$pull: {comments: {writer: user, contents: ctime}}}, function (e) {
                 console.log("댓글 삭제 됨");
             });
@@ -148,10 +161,16 @@ apSchema.createSchema = function (mongoose) {
                 .exec(callback);
             console.log("ap 삭제됨");
         },
-        like_ap: function (id, callback) {
+        like_ap: function (id, uid, callback) {
             this.update({_id: id}, {$inc: {likes: +1}}, function (e) {
-                console.log("ap 업데이트 됨");
+                console.log("ap 업데이트 됨1");
             });
+
+            var ObjectId = require('mongodb').ObjectID;
+            this.update({_id: id, userlist : {$elemMatch : {user: ObjectId(uid)}}}, {$set: {'userlist.$.like': 1}}, function (e) {
+                console.log("ap 업데이트 됨2");
+            });
+
             return this.find({_id: id}, callback);
         }
 

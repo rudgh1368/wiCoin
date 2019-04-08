@@ -26,14 +26,17 @@ module.exports = {
 
         var accountEncryption = web3.eth.accounts.encrypt(privateKey, password);
         console.log("accountEncryption : ", accountEncryption);
-        // var result = {address : address, privateKey : privateKey, accountEncryption : accountEncryption};
-        // callback(result);
 
+        var result = {address : address, privateKey : privateKey, accountEncryption : accountEncryption};
+        callback(result);
+    },
+
+    transferEther : function(address, callback){
+        console.log('web3, transferEther 접근');
         // test를 위해 ether 전송
         Transfer(address, function (success) {
             if(success){
-                var result = {address : address, privateKey : privateKey, accountEncryption : accountEncryption};
-                callback(result);
+                callback(true);
             }
             else{
                 callback(false);
@@ -41,15 +44,16 @@ module.exports = {
         });
     },
 
-    registerAPMac : function(accountEncryption, password, mac, startTime, endTime, callback){
-        console.log('web3, registerAPMac 접근');
+
+    registerAP : function(accountEncryption, password, mac, startTime, endTime, price, callback){
+        console.log('web3, registerAP 접근');
 
         var accountDecryption = web3.eth.accounts.decrypt(accountEncryption, password);
         var address = accountDecryption.address;
         var privateKey = accountDecryption.privateKey;
         wiCoin.setProvider(web3.currentProvider);
 
-        var transfer = wiCoin.methods.registerAPMac(mac, startTime, endTime);
+        var transfer = wiCoin.methods.registerAP(mac, startTime, endTime, price);
         var encodedABI = transfer.encodeABI();
 
         var tx = {
@@ -83,31 +87,6 @@ module.exports = {
                 callback(true);
             });
         });
-    },
-
-    checkEther : function (toaddress, callback) {
-        console.log('web3, checkEther 접근');
-
-        wiCoin.methods.balanceOf(toaddress).call({
-            from : toaddress
-        }, function (err, result) {
-            if(err) {
-                console.log(err);
-                callback(false);
-            }
-            else {
-                console.log('balance : ', result);
-                callback(result);
-            }
-        })
-    },
-
-    etherTransfer : function (toAddress, amount, callback) {
-        console.log('web3, etherTransfer 접근');
-
-        transfer(toAddress, amount, function (success) {
-            callback(success);
-        })
     },
 
     checkToken : function (accountEncryption, password, callback) {
@@ -175,8 +154,277 @@ module.exports = {
                 callback(true);
             });
         });
-    }
+    },
 
+    buyAP : function(accountEncryption, password, apOwnerAddress, apMac, userMac, token, buyTime, callback) {
+        console.log('web3, buyAP 접근');
+
+        var accountDecryption = web3.eth.accounts.decrypt(accountEncryption, password);
+        var address = accountDecryption.address;
+        var privateKey = accountDecryption.privateKey;
+        wiCoin.setProvider(web3.currentProvider);
+
+        var transfer = wiCoin.methods.buyAP(apOwnerAddress, apMac, userMac, token, buyTime);
+        var encodedABI = transfer.encodeABI();
+
+        var tx = {
+            from : address,
+            to : contract_address,
+            gas : 6721975,
+            data : encodedABI
+        };
+
+        web3.eth.accounts.signTransaction(tx, privateKey).then(signed => {
+            console.log("asdasd")
+            var tran = web3.eth.sendSignedTransaction(signed.rawTransaction);
+
+            tran.catch(function (error) {
+                console.log("buyAP error");
+                console.log(error);
+                callback(false);
+            });
+
+            tran.on('confirmation', (confirmationNumber, receipt) => {
+                console.log('confirmation: ' + confirmationNumber);
+            });
+
+            tran.on('transactionHash', hash => {
+                console.log('hash');
+                console.log(hash);
+            });
+
+            tran.on('receipt', receipt => {
+                console.log('reciept');
+                console.log(receipt);
+                callback(true);
+            });
+        });
+    },
+
+    // string memory _userMac, string memory _apMac
+    useAP : function(accountEncryption, password, userMac, apMac, callback) {
+        console.log('web3, useAP 접근');
+
+        var accountDecryption = web3.eth.accounts.decrypt(accountEncryption, password);
+        var address = accountDecryption.address;
+        var privateKey = accountDecryption.privateKey;
+        wiCoin.setProvider(web3.currentProvider);
+
+        var transfer = wiCoin.methods.useAP(userMac, apMac);
+        var encodedABI = transfer.encodeABI();
+
+        var tx = {
+            from : address,
+            to : contract_address,
+            gas : 6721975,
+            data : encodedABI
+        };
+
+        web3.eth.accounts.signTransaction(tx, privateKey).then(signed => {
+            var tran = web3.eth.sendSignedTransaction(signed.rawTransaction);
+
+            tran.catch(function (error) {
+                console.log("useAP error");
+                console.log(error);
+                callback(false);
+            });
+
+            tran.on('confirmation', (confirmationNumber, receipt) => {
+                console.log('confirmation: ' + confirmationNumber);
+            });
+
+            tran.on('transactionHash', hash => {
+                console.log('hash');
+                console.log(hash);
+            });
+
+            tran.on('receipt', receipt => {
+                console.log('reciept');
+                console.log(receipt);
+                callback(true);
+            });
+        });
+    },
+
+    // string memory _userMac, string memory _apMac
+    stopAP : function(accountEncryption, password, userMac, apMac, callback) {
+        console.log('web3, stopAP 접근');
+
+        var accountDecryption = web3.eth.accounts.decrypt(accountEncryption, password);
+        var address = accountDecryption.address;
+        var privateKey = accountDecryption.privateKey;
+        wiCoin.setProvider(web3.currentProvider);
+
+        var transfer = wiCoin.methods.stopAP(userMac, apMac);
+        var encodedABI = transfer.encodeABI();
+
+        var tx = {
+            from : address,
+            to : contract_address,
+            gas : 6721975,
+            data : encodedABI
+        };
+
+        web3.eth.accounts.signTransaction(tx, privateKey).then(signed => {
+            var tran = web3.eth.sendSignedTransaction(signed.rawTransaction);
+
+            tran.catch(function (error) {
+                console.log("stopAP error");
+                console.log(error);
+                callback(false);
+            });
+
+            tran.on('confirmation', (confirmationNumber, receipt) => {
+                console.log('confirmation: ' + confirmationNumber);
+            });
+
+            tran.on('transactionHash', hash => {
+                console.log('hash');
+                console.log(hash);
+            });
+
+            tran.on('receipt', receipt => {
+                console.log('reciept');
+                console.log(receipt);
+                callback(true);
+            });
+        });
+    },
+
+    // string memory _userMac, string memory _apMac
+    endAP : function(accountEncryption, password, userMac, apMac, callback) {
+        console.log('web3, endAP 접근');
+
+        var accountDecryption = web3.eth.accounts.decrypt(accountEncryption, password);
+        var address = accountDecryption.address;
+        var privateKey = accountDecryption.privateKey;
+        wiCoin.setProvider(web3.currentProvider);
+
+        var transfer = wiCoin.methods.endAP(userMac, apMac);
+        var encodedABI = transfer.encodeABI();
+
+        var tx = {
+            from : address,
+            to : contract_address,
+            gas : 6721975,
+            data : encodedABI
+        };
+
+        web3.eth.accounts.signTransaction(tx, privateKey).then(signed => {
+            var tran = web3.eth.sendSignedTransaction(signed.rawTransaction);
+
+            tran.catch(function (error) {
+                console.log("endAP error");
+                console.log(error);
+                callback(false);
+            });
+
+            tran.on('confirmation', (confirmationNumber, receipt) => {
+                console.log('confirmation: ' + confirmationNumber);
+            });
+
+            tran.on('transactionHash', hash => {
+                console.log('hash');
+                console.log(hash);
+            });
+
+            tran.on('receipt', receipt => {
+                console.log('reciept');
+                console.log(receipt);
+                callback(true);
+            });
+        });
+    },
+
+    // _mac
+    onAP : function(accountEncryption, password, apMac, callback) {
+        console.log('web3, onAP 접근');
+
+        var accountDecryption = web3.eth.accounts.decrypt(accountEncryption, password);
+        var address = accountDecryption.address;
+        var privateKey = accountDecryption.privateKey;
+        wiCoin.setProvider(web3.currentProvider);
+
+        var transfer = wiCoin.methods.onAP(apMac);
+        var encodedABI = transfer.encodeABI();
+
+        var tx = {
+            from : address,
+            to : contract_address,
+            gas : 6721975,
+            data : encodedABI
+        };
+
+        web3.eth.accounts.signTransaction(tx, privateKey).then(signed => {
+            var tran = web3.eth.sendSignedTransaction(signed.rawTransaction);
+
+            tran.catch(function (error) {
+                console.log("onAP error");
+                console.log(error);
+                callback(false);
+            });
+
+            tran.on('confirmation', (confirmationNumber, receipt) => {
+                console.log('confirmation: ' + confirmationNumber);
+            });
+
+            tran.on('transactionHash', hash => {
+                console.log('hash');
+                console.log(hash);
+            });
+
+            tran.on('receipt', receipt => {
+                console.log('reciept');
+                console.log(receipt);
+                callback(true);
+            });
+        });
+    },
+
+    //_mac
+    offAP : function(accountEncryption, password, apMac, callback) {
+        console.log('web3, offAP 접근');
+
+        var accountDecryption = web3.eth.accounts.decrypt(accountEncryption, password);
+        var address = accountDecryption.address;
+        var privateKey = accountDecryption.privateKey;
+        wiCoin.setProvider(web3.currentProvider);
+
+        var transfer = wiCoin.methods.offAP(apMac);
+        var encodedABI = transfer.encodeABI();
+
+        var tx = {
+            from : address,
+            to : contract_address,
+            gas : 6721975,
+            data : encodedABI
+        };
+
+        web3.eth.accounts.signTransaction(tx, privateKey).then(signed => {
+            var tran = web3.eth.sendSignedTransaction(signed.rawTransaction);
+
+            tran.catch(function (error) {
+                console.log("offAP error");
+                console.log(error);
+                callback(false);
+            });
+
+            tran.on('confirmation', (confirmationNumber, receipt) => {
+                console.log('confirmation: ' + confirmationNumber);
+            });
+
+            tran.on('transactionHash', hash => {
+                console.log('hash');
+                console.log(hash);
+            });
+
+            tran.on('receipt', receipt => {
+                console.log('reciept');
+                console.log(receipt);
+                callback(true);
+            });
+        });
+    },
 };
 
 // create SmartContract
@@ -192,10 +440,14 @@ function createSmartContract() {
         wiCoin.options.address = contract_address;              // contract 주소
     })
 }
-createSmartContract();
+// 스마트컨트랙트 배포
+// createSmartContract();
+contract_address = "0x65275e7e40d123563de2b6658c701e9bee3bc5c2";
+wiCoin.options.address = '0x65275e7e40d123563de2b6658c701e9bee3bc5c2';
 
 // 100토큰 전달
 function Transfer(toAddress, callback){
+    console.log(toAddress +"에게 ether 전달");
     web3.eth.sendTransaction({to:toAddress, from:"0x5b7C0779F2241bdf429803F0aB63F6948B5aD095", value:100000000000000000})
     callback(true)
 }

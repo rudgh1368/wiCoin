@@ -15,19 +15,21 @@ module.exports={
         {file:'./user', path:'/process/login', method:'login', type:'post'},		    // user.login
         // ,{file:'./user', path:'/process/adduser', method:'adduser', type:'post'}				// user.adduser
         // ,{file:'./user', path:'/process/listuser', method:'listuser', type:'post'}		    	// user.listuser
-        
+
         //===== ap =====//
         {file:'./ap', path:'/addap', method:'addap', type:'get'},
         {file:'./ap', path:'/addap/write', method:'write', type:'post'},
         {file:'./ap', path:'/showap/:id', method:'showap', type:'get'},
         {file:'./ap', path:'/listap', method:'listap', type:'post'},
         {file:'./ap', path:'/listap', method:'listap', type:'get'},
+        {file:'./ap', path:'/listap_search', method:'listap_search', type:'post'},
+        {file:'./ap', path:'/listap_search', method:'listap_search', type:'get'},
         {file:'./ap', path:'/add_user/:id', method:'add_user', type:'get'},
         {file:'./ap', path:'/add_comment/:id', method:'add_comment', type:'get'},
         {file:'./ap', path:'/add_comment', method:'add_comment', type:'post'},
         {file:'./ap', path:'/delete_comment', method:'delete_comment', type:'get'},
         {file:'./ap', path:'/like_ap/:id', method:'like_ap', type:'get'},
-        
+
         //===== mypage =====//
         {file:'./mypage', path:'/mypage', method:'mypage', type:'get'},
         {file:'./mypage', path:'/mypage', method:'mypage', type:'post'},
@@ -40,6 +42,8 @@ module.exports={
         {file:'./mypage', path:'/edit_ap', method:'edit_ap', type:'get'},
         {file:'./mypage', path:'/edit_ap/write', method:'write', type:'post'},
         {file:'./mypage', path:'/delete_ap/:id', method:'delete_ap', type:'get'},
+        {file:'./mypage', path:'/ap_use/:id', method:'ap_use', type:'get'},
+        {file:'./mypage', path:'/ap_stop/:id', method:'ap_stop', type:'get'},
 
         {file:'./useToken', path:'/useToken/:id', method:'useToken', type:'get'},
         {file:'./useToken', path:'/useToken/use', method:'use', type:'post'},

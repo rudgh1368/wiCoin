@@ -1,4 +1,6 @@
 var Entities = require('html-entities').AllHtmlEntities;
+var connectBC = require('../connection/connect');
+var iptables = require('../modules/iptables');
 
 var mypage = function (req, res) {
     console.log('mypage 모듈 안에 있는 mypage 호출됨.');
@@ -18,11 +20,48 @@ var mypage = function (req, res) {
 
         // URL 파라미터로 전달됨
         var paramId = req.user._id;
+        var paramWriter = req.user.id;
 
         console.log('요청 파라미터 : ' + paramId);
 
 
         var database = req.app.get('database');
+        var context = {};
+
+        // 여기서부터
+
+        if (database.db) {
+            database.UserModel.myaplist(paramWriter, function (err, user_results) {
+                if (err) {
+                    console.error('게시판 글 추가 중 에러 발생 : ' + err.stack);
+
+                    res.writeHead('200', {'Content-Type': 'text/html;charset=utf8'});
+                    res.write('<script>alert("게시판 글 추가 중 에러 발생");' +
+                        'location.href="/listap"</script>');
+                    res.end();
+
+                    return;
+                }
+                if (user_results) {
+                    console.dir('user result' + user_results);
+                    context.cuser = user_results;
+                }
+
+                else {
+                    res.writeHead('200', {'Content-Type': 'text/html;charset=utf8'});
+                    res.write('<script>alert("글 조회 실패" + err.stack);' +
+                        'location.href="/listap"</script>');
+                    res.end();
+                }
+            });
+        }else {
+            res.writeHead('200', {'Content-Type': 'text/html;charset=utf8'});
+            res.write('<script>alert("데이터베이스 연결 실패" + err.stack);' +
+                'location.href="/listap"</script>');
+            res.end();
+        }
+        // 여기까지
+
 
         // 데이터베이스 객체가 초기화된 경우
         if (database.db) {
@@ -39,17 +78,15 @@ var mypage = function (req, res) {
                 }
 
                 if (results) {
-                    console.dir(results);
+                    console.dir('ap result' + results);
 
                     // 전체 문서 객체 수 확인
                     database.ApModel.count().exec(function (err, count) {
                         res.writeHead('200', {'Content-Type': 'text/html;charset=utf8'});
 
-                        // 뷰 템플레이트를 이용하여 렌더링한 후 전송
-                        var context = {
-                            aps: results,
-                            Entities: Entities,
-                        };
+                        // 뷰 템플레이트를 이용하여 렌더링한 후 전송 context.user = user_results;
+                        context.aps = results;
+                        context.Etities = Entities;
 
                         if (!req.user) {
                             console.log('ap: 사용자 인증 안된 상태임.');
@@ -94,14 +131,18 @@ var mypage = function (req, res) {
     }
 
 };
-// ap on 했을때
+// ap on 버튼눌렀을때
 var ap_on = function (req, res) {
     console.log('mypage 모듈 안에 있는 ap_on 호출됨.');
 
     // URL 파라미터로 전달됨
     var paramId = req.body.id || req.query.id || req.params.id;
-    
+    var paramApMac = req.body.mac || req.query.mac || req.params.mac;
     console.log('요청 파라미터 : ' + paramId);
+    console.log('요청 paramApMac : ' + paramApMac);
+
+    var accountEncryption = req.user.accountEncryption;
+    var walletPassword = req.user.wallet_password;
 
     var database = req.app.get('database');
 
@@ -123,9 +164,12 @@ var ap_on = function (req, res) {
                 console.dir(results);
                 console.log('ap 업데이트 성공');
 
+                // accountEncryption, password, apMac, callback
+                connectBC.onAP(accountEncryption, walletPassword, paramApMac, function (result) {
+                    if (result) console.log("ap on 완료");
 
-                return res.redirect('/mypage');
-
+                    return res.redirect('/mypage');
+                });
             } else {
                 res.writeHead('200', {'Content-Type': 'text/html;charset=utf8'});
                 res.write('<h2>업데이트  실패</h2>');
@@ -138,14 +182,18 @@ var ap_on = function (req, res) {
         res.end();
     }
 };
-// ap off 했을때
+// ap off 버튼 눌렀을때
 var ap_off = function (req, res) {
     console.log('mypage 모듈 안에 있는 ap_off 호출됨.');
 
     // URL 파라미터로 전달됨
     var paramId = req.body.id || req.query.id || req.params.id;
+    var paramApMac = req.body.mac || req.query.mac || req.params.mac;
 
     console.log('요청 파라미터 : ' + paramId);
+
+    var accountEncryption = req.user.accountEncryption;
+    var walletPassword = req.user.wallet_password;
 
     var database = req.app.get('database');
 
@@ -167,9 +215,14 @@ var ap_off = function (req, res) {
                 console.dir(results);
                 console.log('ap 업데이트 성공');
 
+                connectBC.offAP(accountEncryption, walletPassword, paramApMac, function (result) {
+                    if (result) {
+                        console.log("ap off 완료");
+                        iptables.setting();
+                    }
 
-                return res.redirect('/mypage');
-
+                    return res.redirect('/mypage');
+                });
             } else {
                 res.writeHead('200', {'Content-Type': 'text/html;charset=utf8'});
                 res.write('<h2>업데이트  실패</h2>');
@@ -518,9 +571,140 @@ var delete_ap = function (req, res) {
     }
 };
 
+// 구매자가 ap 사용버튼 눌렀을때
+var ap_use = function (req, res) {
+    console.log('mypage 모듈 안에 있는 ap_use 호출됨.');
 
+    // URL 파라미터로 전달됨
+    var paramId = req.body.id || req.query.id || req.params.id;
+    var paramUid = req.user.id;
+    var paramApMac = req.body.mac || req.query.mac || req.params.mac;
+    var paramIPaddress = req.body.ipAddress || req.query.ipAddress || req.params.ipAddress;
 
+    console.log('요청 파라미터 : ' + paramId);
+    console.log('요청 paramIPaddress : ' + paramIPaddress);
+    var accountEncryption = req.user.accountEncryption;
+    var walletPassword = req.user.wallet_password;
+    var userMac = req.user.mac;
 
+    var database = req.app.get('database');
+
+    if (database.db) {
+        // 1. 글 리스트
+        database.UserModel.ap_use(paramId, paramUid,function (err, results) {
+            if (err) {
+                console.error('user 업데이트 중 에러 발생 : ' + err.stack);
+
+                res.writeHead('200', {'Content-Type': 'text/html;charset=utf8'});
+                res.write('<h2>user 업데이트 중 에러 발생</h2>');
+                res.write('<p>' + err.stack + '</p>');
+                res.end();
+
+                return;
+            }
+
+            if (results) {
+                console.dir("asdasd"+results);
+                console.log('user 업데이트 성공');
+
+                // useAP : function(accountEncryption, password, userMac, apMac, callback)
+                console.log("userMac" , userMac)
+                console.log("paramApMac" , paramApMac)
+                console.log("paramIPaddress" , paramIPaddress)
+                connectBC.useAP(accountEncryption, walletPassword, userMac, paramApMac, function (result) {
+                    if (result) {
+                        console.log("useAP 완료");
+
+                        iptables.accept(paramIPaddress);
+
+                        //     var timer = time * 60 * 1000;
+                        //     setTimeout(function () {
+                        //         console.log(time + "후에 IP DROP");
+                        //         iptables.drop(ip);
+                        //         connectBC.endAP(accountEncryption, walletPassword, userMac, paramApMac, function (result) {
+                        //             if (result) {
+                        //                 console.log("endAP 완료");
+                        //             }else{
+                        //                 console.log("endAP 실패");
+                        //             }
+                        //         });
+                        //     }, timer);
+
+                        return res.redirect('/mypage');
+                    }
+                });
+            } else {
+                res.writeHead('200', {'Content-Type': 'text/html;charset=utf8'});
+                res.write('<h2>업데이트  실패</h2>');
+                res.end();
+            }
+        });
+    } else {
+        res.writeHead('200', {'Content-Type': 'text/html;charset=utf8'});
+        res.write('<h2>데이터베이스 연결 실패</h2>');
+        res.end();
+    }
+};
+// 구매자가 ap 중단버튼 눌렀을때
+var ap_stop = function (req, res) {
+    console.log('mypage 모듈 안에 있는 ap_stop 호출됨.');
+
+    // URL 파라미터로 전달됨
+    var paramId = req.body.id || req.query.id || req.params.id;
+    var paramUid = req.user.id;
+    var paramApMac = req.body.mac || req.query.mac || req.params.mac;
+    var paramIPaddress = req.body.ipAddress || req.query.ipAddress || req.params.ipAddress;
+
+    console.log('요청 파라미터 : ' + paramId);
+
+    var accountEncryption = req.user.accountEncryption;
+    var walletPassword = req.user.wallet_password;
+    var userMac = req.user.mac;
+
+    var database = req.app.get('database');
+
+    if (database.db) {
+        // 1. 글 리스트
+        database.UserModel.ap_stop(paramId, paramUid,function (err, results) {
+            if (err) {
+                console.error('user 업데이트 중 에러 발생 : ' + err.stack);
+
+                res.writeHead('200', {'Content-Type': 'text/html;charset=utf8'});
+                res.write('<h2>user 업데이트 중 에러 발생</h2>');
+                res.write('<p>' + err.stack + '</p>');
+                res.end();
+
+                return;
+            }
+
+            if (results) {
+                console.dir(results);
+                console.log('user 업데이트 성공');
+
+                connectBC.stopAP(accountEncryption, walletPassword, userMac, paramApMac, function (result) {
+                    if (result) {
+                        console.log("stopAP 완료");
+
+                        iptables.drop(paramIPaddress);
+                    }
+
+                    return res.redirect('/mypage');
+                });
+            }else {
+                res.writeHead('200', {'Content-Type': 'text/html;charset=utf8'});
+                res.write('<h2>업데이트  실패</h2>');
+                res.end();
+            }
+        });
+    } else {
+        res.writeHead('200', {'Content-Type': 'text/html;charset=utf8'});
+        res.write('<h2>데이터베이스 연결 실패</h2>');
+        res.end();
+    }
+};
+
+module.exports.ap_use = ap_use;
+module.exports.ap_stop = ap_stop;
 module.exports.ap_on = ap_on;
 module.exports.ap_off = ap_off;
 module.exports.mypage = mypage;

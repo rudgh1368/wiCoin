@@ -56,6 +56,8 @@ contract ERC20 is IERC20 {
     * @param value The amount to be transferred.
     */
     function transfer(address to, uint256 value) public returns (bool) {
+        require(_balances[msg.sender] >= value);
+
         _transfer(msg.sender, to, value);
         return true;
     }
@@ -148,22 +150,22 @@ contract ERC20 is IERC20 {
     }
 
     // chaneel depost
-    function deposit(address consumer, uint256 value) internal {
-        _balances[consumer] = _balances[consumer].sub(value);
-    }
+    // function deposit(address consumer, uint256 value) internal {
+    //     _balances[consumer] = _balances[consumer].sub(value);
+    // }
 
     // chaneel complete
-    function complete(address publisher, uint256 value) internal {
-        _balances[publisher] = _balances[publisher].add(value);
-    }
+    // function complete(address publisher, uint256 value) internal {
+    //     _balances[publisher] = _balances[publisher].add(value);
+    // }
 
     // middle Complete
-    function middleComplete(address publisher, address consumer, uint256 usingTime, uint256 _deposit) internal {
-        uint256 remainingTime = _deposit - usingTime;
+    // function middleComplete(address publisher, address consumer, uint256 usingTime, uint256 _deposit) internal {
+    //     uint256 remainingTime = _deposit - usingTime;
 
-        _balances[publisher] = _balances[publisher].add(usingTime);
-        _balances[consumer] = _balances[consumer].add(remainingTime);
-    }
+    //     _balances[publisher] = _balances[publisher].add(usingTime);
+    //     _balances[consumer] = _balances[consumer].add(remainingTime);
+    // }
 
     /**
      * @dev Internal function that mints an amount of the token and assigns it to

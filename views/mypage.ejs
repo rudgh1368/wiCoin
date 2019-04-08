@@ -40,10 +40,10 @@
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
                     <ul class="nav navbar-nav menu_nav justify-content-right">
-                        <li class="nav-item active"><a class="nav-link" href="/mainmenu">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/mainmenu">Home</a></li>
                         <li class="nav-item"><a class="nav-link" href="/addap">AP 등록</a></li>
                         <li class="nav-item"><a class="nav-link" href="/listap">AP 게시판</a>
-                        <li class="nav-item"><a class="nav-link" href="/mypage">My page</a>
+                        <li class="nav-item active"><a class="nav-link" href="/mypage">My page</a>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li class="nav-item"><a href="/logout" class="primary_btn">로그아웃</a></li>
@@ -133,32 +133,35 @@
                     <div class="pages">
                         <h1>Manage your information and Mac address</h1>
                         <form method="post" action="/edit_name">
-                            <div class="form-group">
-                                <label>이름</label>
+                            <div class="input-group mb-3">
                                 <input type="text" class="form-control" placeholder="수정할 이름을 입력해주세요." name="name" maxlength="20">
-
-                                <input type="submit" class="btn btn-primary" value="수정">
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" type="submit">수정</button>
+                                </div>
                             </div>
-                        </form>
+                        </form><br>
                         <form method="post" action="/edit_tel">
-                            <div class="form-group">
-                                <label>전화번호</label>
+                            <div class="input-group mb-3">
                                 <input type="text" class="form-control" placeholder="수정할 전화번호를 입력해주세요." name="tel" maxlength="20">
-                                <input type="submit" class="btn btn-primary" value="수정">
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" type="submit">수정</button>
+                                </div>
                             </div>
-                        </form>
+                        </form><br>
                         <form method="post" action="/edit_address">
-                            <div class="form-group">
-                                <label>주소</label>
+                            <div class="input-group mb-3">
                                 <input type="text" class="form-control" placeholder="수정할 주소를 입력해주세요." name="address" maxlength="50">
-                                <input type="submit" class="btn btn-primary" value="수정">
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" type="submit">수정</button>
+                                </div>
                             </div>
-                        </form>
+                        </form><br>
                         <form method="post" action="/edit_mac">
-                            <div class="form-group">
-                                <label>Mac 주소 입력 || 현재 Mac 주소 : <%= user.mac %></label>
-                                <input type="text" class="form-control" placeholder="수정할 MAC주소를 입력해주세요" name="mac_addr" maxlength="50">
-                                <input type="submit" class="btn btn-primary" value="수정">
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" placeholder="수정할 MAC을 입력해주세요. 현재 MAC 주소 : <%= user.mac%>" name="mac_addr" maxlength="50">
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" type="submit">수정</button>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -173,12 +176,12 @@
                 <h6>Token&AP</h6>
                 <h1>Check token and using AP</h1>
                 <h4> 보유중인 토큰 : <img src="../public/img/blog/tok.png" alt="post">2.9985 ETH</h4>
-                <a class="charge_btn" href="#">충전하기</a>
+                <a class="사용charge_btn" href="#">충전하기</a>
                 <h4> 현재 사용중인 AP : SSID1</h4>
-                <table style="width: 100%; margin: 10% 0% 0% 5%">
+                <table style="사용width: 100%; margin: 10% 0% 0% 5%">
                     <tr style="background-color: antiquewhite">
                         <th>구매한 AP</th>
-                        <th>잔여시간</th>
+                        <th>사용할 IP Address</th>
                         <th> 사용/중지</th>
                     </tr>
 
@@ -188,12 +191,15 @@
                         } else {
                             var apSsid = cuser[0].aplist[k].ap.ssid; }
                     %>
+                    <form action="/ap_<%= cuser[0].aplist[k].buy_ap_condition %>/<%= cuser[0].aplist[k]._id %>" method="get">
+                        <input name="mac" type="text" style="display: none" value="<%= cuser[0].aplist[k].ap.mac %>">
+                        <tr>
+                         <th><%= apSsid %></th>
+                         <th><input name="ipAddress" type="text"></th>
 
-                    <tr>
-                        <th><%= apSsid %></th>
-                        <th>15m</th>
-                        <th><a class="btn-sm btn-outline-danger"  href="/ap_<%= cuser[0].aplist[k].buy_ap_condition %>/<%= cuser[0].aplist[k]._id %>"   style="margin-top: 3%; display: block" id="a"><%= cuser[0].aplist[k].buy_ap_condition %></a></th>
+                        <th><input class="btn-sm btn-outline-danger"  type="submit" style="margin-top: 3%; display: block" id="a" value="<%= cuser[0].aplist[k].buy_ap_condition %>"></th>
                     </tr>
+                    </form>
 
                     <% }
                     %>
@@ -215,10 +221,9 @@
                 %>
 
                 <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#demo" style="margin-bottom: 3%"><%= curSsid %></button>
-                <label class="switch">
-                    <input type="checkbox">
-                    <span class="slider round"></span>
-                </label>
+
+                <a class="btn btn-danger"  href="/ap_<%= aps[i]._doc.ap_condition %>/<%= aps[i]._id %>?mac=<%= aps[i]._doc.mac %>" style="margin-bottom: 3%"><%= aps[i]._doc.ap_condition%></a>
+
                 <div id="demo" class="collapse">
 
                     <div style="margin: 10% 0% 10% 0%">

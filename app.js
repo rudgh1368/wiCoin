@@ -32,7 +32,7 @@ const express = require('express')
 
     // // 파일 업로드용 미들웨어
     // var multer = require('multer');
-    // var fs = require('fs');
+    var fs = require('fs');
     //
     //클라이언트에서 ajax로 요청 시 CORS(다중 서버 접속) 지원
     var cors = require('cors');

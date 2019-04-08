@@ -85,19 +85,15 @@
                     <p>you can search AP's details that you will use</p>
                 </div>
             </div>
-            <div class="col-lg-6 col-md-6 col-sm-12">
-                <aside class="newsletter_widget">
-                    <div id="mc_embed_signup">
-                        <form action="/listap_search" method="post" class="subscribe_form relative">
-                            <div class="input-group d-flex flex-row">
-                                <input name="ssid" placeholder="AP's SSID" type="text">
-                                <button type="submit" class="btn btn-primary" value="등록">등록</button>
-                            </div>
+            <form class="form-inline" action="/listap_search">
 
-                        </form>
-                    </div>
-                </aside>
-            </div>
+                <label for="email">SSID 검색:&nbsp;&nbsp;</label>
+
+                <input type="text" class="form-control" name="ssid">
+
+                <button type="submit" class="btn btn-primary">검색</button>
+
+            </form>
         </div>
     </div>
 </section>

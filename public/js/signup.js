@@ -4,7 +4,7 @@ var accountEncryption;
 
 $(document).ready(function () {
     $.jsonRPC.setup({
-        endPoint: 'http://localhost:3000/api',
+        endPoint: '/api',
         namespace: ''
     });
 });

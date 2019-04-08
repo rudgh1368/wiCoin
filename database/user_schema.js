@@ -1,5 +1,6 @@
 var crypto = require('crypto');
 
+
 var userSchema = {};
 
 userSchema.createSchema = function(mongoose) {
@@ -15,6 +16,11 @@ userSchema.createSchema = function(mongoose) {
         tel: {type: Number, required: true, 'default':''},
         address: {type: String, required: true, 'default':''},
         mac: {type: String, 'default': ''},
+        aplist: [{
+            ap: {type: mongoose.Schema.ObjectId, ref: 'aps'},
+            buy_ap_condition: {type: String, 'default' : 'use'},
+            buying_at: {type: Date, 'default': Date.now}
+        }],
         posts: [{ // 관련된 게시물의 Smart Contract Address 와 그 때의 역할
             smart_addr: {type: String},
             role: {type: Number} // 1: 시행사, 2: 투자자...
@@ -120,19 +126,21 @@ userSchema.createSchema = function(mongoose) {
 
 
     // 모델 객체에서 사용할 수 있는 메소드 정의
-    UserSchema.static('findById', function(id, callback) {
-        return this.find({id:id}, callback);
-    });
+    // UserSchema.static('findById', function(id, callback) {
+    //     return this.find({id:id}, callback);
+    // });
 
     UserSchema.static('findAll', function(callback) {
         return this.find({}, callback);
     });
 
     UserSchema.statics = {
-        findById: function (id, callback) {
-            return this.find({id: id}, callback);
-        },
         // ID로 글 찾기
+
+        findById: function(id, callback) {
+            return this.find({id:id}, callback);
+        },
+
         edit_name: function (user, uname, callback) {
             this.update( {_id:user}, {$set :{name: uname} } )
                 .exec(callback);
@@ -152,6 +160,39 @@ userSchema.createSchema = function(mongoose) {
             this.update( {_id:user}, {$set :{mac: umac} } )
                 .exec(callback);
         },
+
+        add_ap: function (id, user, callback) {
+            this.update({_id: user}, {$push: {aplist: {ap: id}}}, function (e) {
+                console.log("user 업데이트 됨");
+            });
+            return this.find({_id: user}, callback);
+        },
+        myaplist: function (id, callback) {
+            // var criteria = options.criteria || {};
+
+            this.find({id:id})
+                .populate('aplist.ap')
+                .exec(callback);
+        },
+
+        ap_use: function (id, uid,callback) {
+            var ObjectId = require('mongodb').ObjectID;
+
+            this.update({id : uid, aplist : {$elemMatch : {_id: ObjectId(id)}}},{$set: {'aplist.$.buy_ap_condition': "stop"}}, function (e) {
+                console.log("user 업데이트 됨");
+
+            });
+            return this.find(callback);
+        },
+
+        ap_stop: function (id, uid,callback) {
+            var ObjectId = require('mongodb').ObjectID;
+            this.update({id : uid, aplist : {$elemMatch : {_id: ObjectId(id)}}},{$set: {'aplist.$.buy_ap_condition': "use"}}, function (e) {
+                console.log("user 업데이트 됨");
+
+            });
+            return this.find(callback);
+        }
 
     }
 

@@ -51,19 +51,22 @@ var write = function (req, res) {
     var paramEndTime = req.body.end_time || req.query.end_time;
     var paramContents = req.body.contents || req.query.contents;
     var paramMac = req.body.mac || req.query.mac;
+    var paramPrice = req.body.price || req.query.price;
 
     console.log('요청 파라미터 : ' + paramWallet + ', ' + paramWriter + ', '
         + paramSsid + ', ' + paramStartTime  + ', ' + paramEndTime
-        + ', ' + paramContents + ', ' + paramMac);
+        + ', ' + paramContents + ', ' + paramMac + ', ' + paramPrice);
 
     var startTime = paramStartTime.split(":");
     var endTime = paramStartTime.split(":");
     startTime = parseInt(startTime[0] + startTime[1]);
     endTime = parseInt(endTime[0] + endTime[1]);
 
-    connectBC.registerAPMac(accountEncryption, walletPassword, paramMac, startTime, endTime, function (result) {
+    // price 입력 해야됨
+
+    connectBC.registerAP(accountEncryption, walletPassword, paramMac, startTime, endTime, parseInt(paramPrice), function (result) {
         if(result == true){
-           console.log("AP 블록체인 등록 성공")
+           console.log("AP 블록체인 등록 성공");
 
             var database = req.app.get('database');
 
@@ -106,7 +109,8 @@ var write = function (req, res) {
                         start_time : paramStartTime,
                         end_time : paramEndTime,
                         contents : paramContents,
-                        mac : paramMac
+                        mac : paramMac,
+                        price : paramPrice
                     });
 
                     ap.saveAp(function (err, result) {
@@ -210,6 +214,106 @@ var listap = function (req, res) {
                     }
 
                     req.app.render('listap', context, function (err, html) {
+
+                        if (err) {
+                            console.error('응답 웹문서 생성 중 에러 발생 : ' + err.stack);
+
+                            res.writeHead('200', {'Content-Type': 'text/html;charset=utf8'});
+                            res.write('<script>alert("응답 웹문서 생성 중 에러 발생" + err.stack);' +
+                                'location.href="/"</script>');
+                            res.end();
+                            return;
+                        }
+
+                        res.end(html);
+                    });
+
+                });
+
+            } else {
+                res.writeHead('200', {'Content-Type': 'text/html;charset=utf8'});
+                res.write('<script>alert("글 목록 조회 실패" + err.stack);' +
+                    'location.href="/"</script>');
+                res.end();
+            }
+        });
+    } else {
+        res.writeHead('200', {'Content-Type': 'text/html;charset=utf8'});
+        res.write('<script>alert("데이터베이스 연결 실패" + err.stack);' +
+            'location.href="/"</script>');
+        res.end();
+    }
+
+};
+
+// ap 찾기
+var listap_search = function (req, res) {
+    console.log('ap 모듈 안에 있는 listap_search 호출됨.');
+
+    var paramPage = req.body.page || req.query.page;
+    var paramPerPage = req.body.perPage || req.query.perPage;
+    var paramSsid =  req.body.ssid || req.query.ssid;
+
+
+    console.log('요청 파라미터 : ' + paramPage + ', ' + paramPerPage + ' ,' + paramSsid);
+
+    var database = req.app.get('database');
+
+    // 데이터베이스 객체가 초기화된 경우
+    if (database.db) {
+        // 1. 글 리스트
+        var options = {
+            page: paramPage,
+            perPage: paramPerPage,
+            ssid : paramSsid
+        }
+
+        database.ApModel.search_list(options, function (err, results) {
+            if (err) {
+                console.error('게시판 글 목록 조회 중 에러 발생 : ' + err.stack);
+
+                res.writeHead('200', {'Content-Type': 'text/html;charset=utf8'});
+                res.write('<script>alert("게시판 글 목록 조회 중 에러 발생");' +
+                    'location.href="/"</script>');
+                res.end();
+
+                return;
+            }
+
+            if (results) {
+                console.dir(results);
+
+                // 전체 문서 객체 수 확인
+                database.ApModel.count().exec(function (err, count) {
+                    // 뷰 템플레이트를 이용하여 렌더링한 후 전송=
+                    var context = {
+                        title: '글 목록',
+                        aps: results,
+                        page:  1, //parseInt(paramPage),
+                        pageCount: 1, //Math.ceil(count / paramPerPage),
+                        perPage: 10, //paramPerPage,
+                        totalRecords: count,
+                        size: paramPerPage
+                    };
+                    // var cp = context.posts;
+                    // console.log("cp: " + cp);
+                    // for (var i = 0; i < cp.size; i++){
+                    //     var time = cp[i]._doc.created_at;
+                    //     cp[i]._doc.created_at = time.substring(time.length - 20);
+                    //     console.log(time);
+                    // }
+                    if (!req.user) {
+                        console.log('ap: 사용자 인증 안된 상태임.');
+                        context.login_success = false;
+                    } else {
+                        console.log('ap: 사용자 인증된 상태임.');
+                        console.log('회원정보 로드.');
+                        console.dir(req.user);
+                        context.login_success = true;
+                        context.user = req.user;
+                    }
+
+                    req.app.render('listap_search', context, function (err, html) {
 
                         if (err) {
                             console.error('응답 웹문서 생성 중 에러 발생 : ' + err.stack);
@@ -348,8 +452,39 @@ var add_user = function (req, res) {
             if (results) {
                 console.dir(results);
                 console.log('ap 업데이트 성공');
+                //return res.redirect('/mypage');
 
+            } else {
+                res.writeHead('200', {'Content-Type': 'text/html;charset=utf8'});
+                res.write('<h2>업데이트  실패</h2>');
+                res.end();
+            }
+        });
+    } else {
+        res.writeHead('200', {'Content-Type': 'text/html;charset=utf8'});
+        res.write('<h2>데이터베이스 연결 실패</h2>');
+        res.end();
+    }
 
+    // 구매한 ap 업데이트
+
+    if (database.db) {
+        // 1. 글 리스트
+        database.UserModel.add_ap(paramId, paramUser,function (err, results) {
+            if (err) {
+                console.error('user 업데이트 중 에러 발생 : ' + err.stack);
+
+                res.writeHead('200', {'Content-Type': 'text/html;charset=utf8'});
+                res.write('<h2>user 업데이트 중 에러 발생</h2>');
+                res.write('<p>' + err.stack + '</p>');
+                res.end();
+
+                return;
+            }
+
+            if (results) {
+                console.dir(results);
+                console.log('user 업데이트 성공');
                 return res.redirect('/mypage');
 
             } else {
@@ -363,7 +498,9 @@ var add_user = function (req, res) {
         res.write('<h2>데이터베이스 연결 실패</h2>');
         res.end();
     }
+
 };
+
 
 var add_comment = function (req, res) {
     console.log('ap 모듈 안에 있는 add_comment 호출됨.');
@@ -470,7 +607,7 @@ var like_ap = function (req, res) {
     if (database.db) {
 
 
-        database.ApModel.like_ap(paramAp,function (err, results) {
+        database.ApModel.like_ap(paramAp,paramUser,function (err, results) {
             if (err) {
                 console.error('ap 업데이트 중 에러 발생 : ' + err.stack);
 
@@ -503,7 +640,6 @@ var like_ap = function (req, res) {
 };
 
 
-
 module.exports.addap = addap;
 module.exports.listap = listap;
 module.exports.write = write;
@@ -512,3 +648,4 @@ module.exports.add_user = add_user;
 module.exports.add_comment = add_comment;
 module.exports.delete_comment = delete_comment;
 module.exports.like_ap = like_ap;
+module.exports.listap_search = listap_search;

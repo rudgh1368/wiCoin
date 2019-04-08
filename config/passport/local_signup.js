@@ -1,6 +1,7 @@
 // 로컬 인증 방식을 사용하는 패스포트 설정
 
 var LocalStrategy = require('passport-local').Strategy;
+var connectBC = require('../../connection/connect');
 
 module.exports = new LocalStrategy({
     usernameField: 'id',
@@ -52,7 +53,18 @@ module.exports = new LocalStrategy({
                     }
 
                     console.log("사용자 데이터 추가함.");
-                    return done(null, user); // 검증 콜백에서 두 번째 파라미터 값을 user 객체로 넣어 인증 성공한 것으로 처리
+
+                    connectBC.transferEther(paramWallet, function (transferResult) {
+                        if(transferResult) {
+                            console.log("Ether 전송완료");
+
+                            return done(null, user);
+                        }else { // 추후에 error 처리
+                            console("transferEther error");
+
+                            return done(null, user);
+                        }
+                    })
                 });
             }
         });

@@ -81,6 +81,24 @@
     "constant": false,
     "inputs": [
       {
+        "name": "_userMac",
+        "type": "string"
+      },
+      {
+        "name": "_apMac",
+        "type": "string"
+      }
+    ],
+    "name": "endAP",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
         "name": "_mac",
         "type": "string"
       }
@@ -146,33 +164,23 @@
     "constant": false,
     "inputs": [
       {
-        "name": "_mac",
-        "type": "string"
-      }
-    ],
-    "name": "addUserMac",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
         "name": "_apOwnerAddress",
         "type": "address"
-      },
-      {
-        "name": "_userMac",
-        "type": "string"
       },
       {
         "name": "_apMac",
         "type": "string"
       },
       {
-        "name": "_deposit",
+        "name": "_userMac",
+        "type": "string"
+      },
+      {
+        "name": "_token",
+        "type": "uint256"
+      },
+      {
+        "name": "_buyTime",
         "type": "uint256"
       }
     ],
@@ -186,65 +194,15 @@
     "constant": false,
     "inputs": [
       {
-        "name": "_channelSerial",
-        "type": "uint256"
+        "name": "_userMac",
+        "type": "string"
       },
       {
-        "name": "_balanceProof",
-        "type": "bytes32"
-      },
-      {
-        "name": "v",
-        "type": "uint8"
-      },
-      {
-        "name": "r",
-        "type": "bytes32"
-      },
-      {
-        "name": "s",
-        "type": "bytes32"
-      },
-      {
-        "name": "_balance",
-        "type": "uint256"
+        "name": "_apMac",
+        "type": "string"
       }
     ],
-    "name": "completeChannel",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_channelSerial",
-        "type": "uint256"
-      },
-      {
-        "name": "_balanceProof",
-        "type": "bytes32"
-      },
-      {
-        "name": "v",
-        "type": "uint8"
-      },
-      {
-        "name": "r",
-        "type": "bytes32"
-      },
-      {
-        "name": "s",
-        "type": "bytes32"
-      },
-      {
-        "name": "_balance",
-        "type": "uint256"
-      }
-    ],
-    "name": "publisherStoreBP",
+    "name": "useAP",
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
@@ -256,9 +214,21 @@
       {
         "name": "_mac",
         "type": "string"
+      },
+      {
+        "name": "_startTime",
+        "type": "uint256"
+      },
+      {
+        "name": "_endTime",
+        "type": "uint256"
+      },
+      {
+        "name": "_price",
+        "type": "uint256"
       }
     ],
-    "name": "registerUser",
+    "name": "registerAP",
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
@@ -287,6 +257,24 @@
     "constant": false,
     "inputs": [],
     "name": "renounceOwnership",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_userMac",
+        "type": "string"
+      },
+      {
+        "name": "_apMac",
+        "type": "string"
+      }
+    ],
+    "name": "stopAP",
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
@@ -388,28 +376,6 @@
     "constant": false,
     "inputs": [
       {
-        "name": "_mac",
-        "type": "string"
-      },
-      {
-        "name": "_startTime",
-        "type": "uint256"
-      },
-      {
-        "name": "_endTime",
-        "type": "uint256"
-      }
-    ],
-    "name": "registerAPMac",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
         "name": "to",
         "type": "address"
       },
@@ -425,40 +391,6 @@
         "type": "bool"
       }
     ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_channelSerial",
-        "type": "uint256"
-      },
-      {
-        "name": "_balanceProof",
-        "type": "bytes32"
-      },
-      {
-        "name": "v",
-        "type": "uint8"
-      },
-      {
-        "name": "r",
-        "type": "bytes32"
-      },
-      {
-        "name": "s",
-        "type": "bytes32"
-      },
-      {
-        "name": "_balance",
-        "type": "uint256"
-      }
-    ],
-    "name": "publisherCompleteChannel",
-    "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
     "type": "function"
@@ -509,20 +441,6 @@
       }
     ],
     "name": "transferOwnership",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_channelSerial",
-        "type": "uint256"
-      }
-    ],
-    "name": "consumerCompleteChannel",
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
